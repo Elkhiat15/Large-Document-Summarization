@@ -1,5 +1,5 @@
 import re
-from langchain.document_loaders import PyPDFLoader
+from langchain.document_loaders import PyPDFLoader, csv_loader
 
 class Document():
     ID = -1
@@ -10,6 +10,11 @@ class Document():
 
     def load_from_pdf(self, FilePath):
         loader = PyPDFLoader(FilePath)
+        document = loader.load()
+        self.extract_data_from_document(document)
+    
+    def load_from_csv(self, FilePath):
+        loader = csv_loader(FilePath)
         document = loader.load()
         self.extract_data_from_document(document)
             
