@@ -17,7 +17,7 @@ def generate_embeddeing_google(text:str):
 
 def embed_with_hugging_face(text, task):
     # use this opensource if there is no gemni api is linked
-    # need to check max seq length
+    # need to check max seq length and make sure it alligns with gimini or handle passing the chuck length 
     embeddings = HuggingFaceInstructEmbeddings(
         query_instruction="Represent the query for summarization: "
     )
