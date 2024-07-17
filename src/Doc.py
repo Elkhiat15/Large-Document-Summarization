@@ -7,6 +7,7 @@ class Document():
         Document.ID += 1
         self.data = ""
         self.title = None
+        self.summary_ids = []
 
     def load_from_pdf(self, FilePath):
         loader = PyPDFLoader(FilePath)
@@ -30,7 +31,20 @@ class Document():
         text_content = re.sub(r'\n{2,}', '\n', text_content)
         return text_content.strip()
 
+    def vectorize(self, document):
+        pass
+    
+    def save_to_vector_db(self, document):
+        pass
 
+    def summerize(self, document):
+        pass
+    
+    def refine_summary(self):
+        pass
+
+    def guid_refine_summary(self, rule):
+        pass
 
 
 doc = Document()
