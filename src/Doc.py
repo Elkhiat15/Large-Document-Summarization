@@ -2,8 +2,11 @@ import re
 from langchain.document_loaders import PyPDFLoader
 
 class Document():
+    ID = -1
     def __init__(self):
-        self.data = []
+        Document.ID += 1
+        self.data = ""
+        self.title = None
 
     def load_from_pdf(self, FilePath):
         loader = PyPDFLoader(FilePath)
@@ -13,7 +16,7 @@ class Document():
     def extract_data_from_document(self, document):
         text_content = ' '.join([page.page_content for page in document])
         clean_text = self.clean_text(text_content)
-        self.data.append(clean_text)
+        self.data += clean_text
     
     def clean_text(self, text_content):
         text_content = re.sub(r'\t|[ ]{2,}', ' ', text_content)
