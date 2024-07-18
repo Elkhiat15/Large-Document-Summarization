@@ -112,4 +112,5 @@ class Document():
 
 doc = Document()
 doc.load_from_pdf('Books/the-story-of-doctor-dolittle.pdf')
-print(doc.data[0])
+print(doc.data)
+print(doc.vectorize(text=doc.data, task="summarization"))

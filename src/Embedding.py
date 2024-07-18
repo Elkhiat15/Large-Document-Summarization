@@ -1,9 +1,10 @@
-import os
+from dotenv import load_dotenv
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import HuggingFaceInstructEmbeddings
 
 def generate_embeddeing_google(text:str):
+    load_dotenv()
     text_splitter = RecursiveCharacterTextSplitter(
     separators=["\n\n", "\n", "\t"], 
     chunk_size=6000,
@@ -11,6 +12,7 @@ def generate_embeddeing_google(text:str):
     )
 
     docs = text_splitter.create_documents([text])
+
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     vectors = embeddings.embed_documents([x.page_content for x in docs])
     return vectors
