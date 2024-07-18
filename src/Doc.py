@@ -54,7 +54,7 @@ class Document():
         cleaned_text = text_content.strip()
         return cleaned_text
 
-    def vectorize(self, text, task):
+    def vectorize(self, opensource,text, task):
         '''
             Creates embeddings for the given text            
                 Parameters:
@@ -64,7 +64,7 @@ class Document():
                 Returns:
                     embeddings (list): the embeddings for the given text
         '''  
-        embeddings = generate_embedding(open_source=False, text=text, task=task)
+        embeddings = generate_embedding(open_source=opensource, text=text, task=task)
         return embeddings
     
     def save_to_vector_db(self, document):
@@ -111,6 +111,5 @@ class Document():
 
 
 doc = Document()
-doc.load_from_pdf('Books/Atomic habits ( PDFDrive ).pdf')
-print(doc.data)
-print(doc.vectorize(text=doc.data, task="summarization"))
+doc.load_from_pdf('Books/the-story-of-doctor-dolittle.pdf')
+print(doc.vectorize(opensource=True,text=doc.data, task="summarization"))
