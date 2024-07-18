@@ -55,14 +55,41 @@ def cluster_and_summarize(num_clusters):
     summaries = get_summaries(map_chain, selected_indices, docs)
     return summaries
 
+def summarize_all(summaries):
+    combine_prompt = """
+    You will be given a series of summaries from a one book or many books. The summaries will be enclosed in triple backticks (```)
+    Your goal is to give a verbose summary of what said in those summaries.
+    The finall summary you give the reader should be coherance and easy to grasp the whole summaries.
+    You should consider the order of summaries and divide the summary to parts.
+
+    ```{text}```
+    VERBOSE SUMMARY:
+    """
+    combine_prompt_template = PromptTemplate(template=combine_prompt, input_variables=["text"])
+
+    reduce_chain = load_summarize_chain(
+        llm=llm,
+        prompt=combine_prompt_template
+        )
+
+    output = reduce_chain.invoke([summaries])
+    full_summary = output['output_text']
+    return full_summary    
+
+
+# intializing the LLModel
 load_dotenv()
+llm = ChatGoogleGenerativeAI(model="gemini-pro")
+
+# loading, cleaning and embedding
 doc = Doc.Document()
 doc.load_from_pdf('./Books/Final_proba_(1111.pdf')
-
 cleaned_text = doc.data
 docs, vectors = emb.generate_embedding(open_source=False, text=cleaned_text)
 
-llm = ChatGoogleGenerativeAI(model="gemini-pro")
-
+# summarizing
 num_clusters = 5
 summaries = cluster_and_summarize(num_clusters)
+response = summarize_all(summaries)
+
+print(f"\033[1;32m {response} \033[0m") # to print in green in terminal 
