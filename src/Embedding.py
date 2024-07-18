@@ -48,7 +48,7 @@ def generate_embedding_google(text: str):
 
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     vectors = embeddings.embed_documents([x.page_content for x in docs])
-    return vectors
+    return docs, vectors
 
 def embed_with_hugging_face(text: str, task: str):
     """

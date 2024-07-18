@@ -108,8 +108,3 @@ class Document():
                     None
         '''          
         pass
-
-
-doc = Document()
-doc.load_from_pdf('Books/the-story-of-doctor-dolittle.pdf')
-print(doc.vectorize(opensource=True,text=doc.data, task="summarization"))
