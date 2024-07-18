@@ -1,5 +1,5 @@
 import re
-from langchain.document_loaders import PyPDFLoader, csv_loader
+from langchain.document_loaders import PyPDFLoader
 from Embedding import generate_embedding
 
 class Document():
