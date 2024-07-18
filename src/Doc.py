@@ -71,8 +71,3 @@ class Document():
     def guid_refine_summary(self, rule):
         # ask to refine the summary with a given rule
         pass
-
-
-doc = Document()
-doc.load_from_pdf('Books/the-story-of-doctor-dolittle.pdf')
-print(doc.data[0])

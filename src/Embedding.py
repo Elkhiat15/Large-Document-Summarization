@@ -13,7 +13,7 @@ def generate_embeddeing_google(text:str):
     docs = text_splitter.create_documents([text])
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     vectors = embeddings.embed_documents([x.page_content for x in docs])
-    return vectors
+    return docs, vectors
 
 def embed_with_hugging_face(text, task):
     # use this opensource if there is no gemni api is linked
