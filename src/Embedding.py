@@ -3,6 +3,30 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
+
+def chunck(text, size, overlap):
+    """
+    Chunk a text into documents
+    based on newline characters and a specified chunk size.
+
+    Parameters:
+    text (str): The input text to be chunked.
+    size (int): The maximum size of each chunk in characters.
+    overlap (int): the number of overlapping.
+
+    Returns:
+    list: A list of documents, each containing a chunk of the input text.
+
+    """
+    text_splitter = RecursiveCharacterTextSplitter(
+        separators=["\n\n", "\n", "\t"], 
+        chunk_size=size,
+        chunk_overlap=overlap
+    )
+
+    docs = text_splitter.create_documents([text])
+    return docs
+
 def generate_embedding(open_source: bool, text: str, task: str = "summarization"):
     """
     Generate embeddings for the provided text using either Google Generative AI or Hugging Face models.
@@ -37,15 +61,7 @@ def generate_embedding_google(text: str):
     Returns:
     list: A list of embeddings for the input text chunks.
     """
-    load_dotenv()
-    text_splitter = RecursiveCharacterTextSplitter(
-        separators=["\n\n", "\n", "\t"], 
-        chunk_size=6000,
-        chunk_overlap=500
-    )
-
-    docs = text_splitter.create_documents([text])
-
+    docs = chunck(text, size=6000, overlap=500)  
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     vectors = embeddings.embed_documents([x.page_content for x in docs])
     return docs, vectors
@@ -64,26 +80,13 @@ def embed_with_hugging_face(text: str, task: str):
     Returns:
     list: A list of embeddings for the input text.
     """
+    docs = chunck(text, size=512, overlap=150)  
 
-    max_seq_length = 512  # This should match the model's maximum sequence length
-
-    # Split text into chunks that do not exceed the max_seq_length
-    text_splitter = RecursiveCharacterTextSplitter(
-        separators=["\n\n", "\n", "\t"],
-        chunk_size=max_seq_length,
-        chunk_overlap=150  
-    )
-
-    docs = text_splitter.create_documents([text])
-
-    
     try:
         embeddings = HuggingFaceEmbeddings()
     except ImportError as e:
         print(e)
         return
 
-    # Generate embeddings for each chunk and concatenate them
     vectors = embeddings.embed_documents([x.page_content for x in docs])
-    
     return vectors
