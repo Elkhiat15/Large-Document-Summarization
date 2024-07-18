@@ -8,6 +8,7 @@ class Document():
         Document.ID += 1
         self.data = ""
         self.title = None
+        self.summaries = []
 
     def load_from_pdf(self, FilePath):
         '''
@@ -18,7 +19,7 @@ class Document():
             
                 Returns:
                     None
-       '''        
+        '''        
         loader = PyPDFLoader(FilePath)
         document = loader.load()
         self.extract_data_from_document(document)
@@ -32,7 +33,7 @@ class Document():
             
                 Returns:
                     None
-       '''        
+        '''        
         text_content = ' '.join([page.page_content for page in document])
         clean_text = self.clean_text(text_content)
         self.data += clean_text
@@ -46,7 +47,7 @@ class Document():
             
                 Returns:
                     cleaned_text (str): the cleaned text to be processed 
-       '''        
+        '''        
         text_content = re.sub(r'\t|[ ]{2,}', ' ', text_content)
         text_content = re.sub(r'\n[ ]', '\n', text_content)
         text_content = re.sub(r'\n{2,}', '\n', text_content)
@@ -54,22 +55,58 @@ class Document():
         return cleaned_text
 
     def vectorize(self, text, task):
-        return generate_embedding(open_source=False, text=text, task=task)
+        '''
+            Creates embeddings for the given text            
+                Parameters:
+                    text (str): The whole text of the document.
+                    task (str): The task for which the embeddings summerization, retriva, etc.
+            
+                Returns:
+                    embeddings (list): the embeddings for the given text
+        '''  
+        embeddings = generate_embedding(open_source=False, text=text, task=task)
+        return embeddings
     
     def save_to_vector_db(self, document):
-        # store each document embeddings in a vector db
+        '''
+            Saves the embeddings of the document to the vector database           
+                Parameters:
+                    document (str): The whole text of the document.
+            
+                Returns:
+                    None
+        '''  
+        
         pass
 
     def summerize(self, document):
-        # do the summerization
+        '''
+            Creates summary of the document given and saves it in the summaries list.           
+                Parameters:
+                    document (str): The whole text of the document.    
+
+                Returns:
+                    None
+        '''  
         pass
     
     def refine_summary(self):
-        # ask to refine the summary
+        '''
+            Makes the model modify the summary of the document, and adds it to the summary list
+  
+        '''  
+
         pass
 
     def guid_refine_summary(self, rule):
-        # ask to refine the summary with a given rule
+        '''
+            Makes the model modify the summary of the document based on a given prompt (rule), and adds it to the summary list
+                Parameters:
+                rule (str): A prompt string to guide the summary creation.
+    
+                Returns:
+                    None
+        '''          
         pass
 
 
