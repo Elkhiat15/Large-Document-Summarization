@@ -10,6 +10,17 @@ from sklearn.cluster import KMeans
 from dotenv import load_dotenv
 
 def get_indices(num_clusters, kmeans):
+    '''
+        Gets the closest indices to clusters centriods to be summarized.
+        
+            Parameters:
+                num_clusters (int): Number of clusters.
+                kmeans (KMeans): A fitted K-Means model.
+        
+            Returns:
+                selected_indices (list[int]): A list of indices of data points closest to each centriod.
+    '''        
+
     closest_indices = []
 
     for i in range(num_clusters):
@@ -21,6 +32,18 @@ def get_indices(num_clusters, kmeans):
     return selected_indices
 
 def get_summaries(map_chain, selected_indices, docs):
+    '''
+        Gets the summary of each selected chunk after clustring then combines the summaries into one document.
+        
+            Parameters:
+                map_chain (BaseCombineDocumentsChain): A langchain LLM the is responsible for summarize chunks.
+                selected_indices (list[int]): A list of indices of data points closest to each centriod.
+                docs (list[Document]): A list of documents where each document holds a chunck of the whole document.
+
+            Returns:
+                summaries (Document): The combined summaries.
+    '''        
+
     selected_docs = [docs[idx] for idx in selected_indices]
 
     summary_list = []
@@ -33,6 +56,16 @@ def get_summaries(map_chain, selected_indices, docs):
     return summaries
 
 def cluster_and_summarize(num_clusters):
+    '''
+        Gets the summary of each selected chunk after clustring then combines the summaries into one document.
+        
+            Parameters:
+                num_clusters (int): Number of clusters.
+                
+            Returns:
+                summaries (Document): The combined summaries.
+    '''        
+
     kmeans = KMeans(n_clusters=num_clusters, random_state=42).fit(vectors)
 
     selected_indices = get_indices(num_clusters, kmeans)
@@ -56,6 +89,16 @@ def cluster_and_summarize(num_clusters):
     return summaries
 
 def summarize_all(summaries):
+    '''
+        Gets the summary of all summaries.
+        
+            Parameters:
+                summaries (Document): The combined summaries.
+                
+            Returns:
+                full_summary (str): The full summary we target.
+    '''        
+
     combine_prompt = """
     You will be given a series of summaries from a one book or many books. The summaries will be enclosed in triple backticks (```)
     Your goal is to give a verbose summary of what said in those summaries.
