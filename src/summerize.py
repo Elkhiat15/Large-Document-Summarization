@@ -1,4 +1,4 @@
-import Doc, Embedding as emb
+#import Doc, Embedding as emb
 import numpy as np
 
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -156,18 +156,18 @@ def summarize(n_clusters):
 
 
 # intializing the LLModel
-load_dotenv()
-llm = ChatGoogleGenerativeAI(model="gemini-pro")
+# load_dotenv()
+# llm = ChatGoogleGenerativeAI(model="gemini-pro")
 
-# loading, cleaning and embedding
-doc = Doc.Document()
-doc.load_from_pdf('./Books/Final_proba_(1111.pdf')
-cleaned_text = doc.data
-docs, vectors = emb.generate_embedding(open_source=False, text=cleaned_text)
+# # loading, cleaning and embedding
+# doc = Doc.Document()
+# doc.load_from_pdf('./Books/Final_proba_(1111.pdf')
+# cleaned_text = doc.data
+# docs, vectors = emb.generate_embedding(open_source=False, text=cleaned_text)
 
-# summarizing
-num_clusters = 5
-summaries = cluster_and_summarize(num_clusters)
-response = summarize_all(summaries)
+# # summarizing
+# num_clusters = 5
+# summaries = cluster_and_summarize(num_clusters)
+# response = summarize_all(summaries)
 
-print(f"\033[1;32m {response} \033[0m") # to print in green in terminal 
+# print(f"\033[1;32m {response} \033[0m") # to print in green in terminal 
