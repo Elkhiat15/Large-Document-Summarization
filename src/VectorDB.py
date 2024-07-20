@@ -5,6 +5,7 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from Embedding import chunck
 
+
 class VectorDataBase:
 
     def __init__(self, use_open_source=False):
