@@ -117,7 +117,42 @@ def summarize_all(summaries):
 
     output = reduce_chain.invoke([summaries])
     full_summary = output['output_text']
-    return full_summary    
+    return full_summary  
+
+
+####################################### Suggested Modification ##############################
+def summarize(n_clusters):
+    '''
+        Gets the summary of all summaries.
+        
+            Parameters:
+                summaries (Document): The combined summaries.
+                
+            Returns:
+                full_summary (str): The full summary we target.
+    '''        
+
+    combine_prompt = """
+    You will be given a series of summaries from a one book or many books. The summaries will be enclosed in triple backticks (```)
+    Your goal is to give a verbose summary of what said in those summaries.
+    The finall summary you give the reader should be coherance and easy to grasp the whole summaries.
+    You should consider the order of summaries and divide the summary to parts.
+
+    ```{text}```
+    VERBOSE SUMMARY:
+    """
+    summaries = cluster_and_summarize(num_clusters=n_clusters)
+    combine_prompt_template = PromptTemplate(template=combine_prompt, input_variables=["text"])
+
+    reduce_chain = load_summarize_chain(
+        llm=llm,
+        prompt=combine_prompt_template
+        )
+
+    output = reduce_chain.invoke([summaries])
+    full_summary = output['output_text']
+    return full_summary  
+#########################################################################
 
 
 # intializing the LLModel
