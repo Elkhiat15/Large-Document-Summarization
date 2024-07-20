@@ -28,7 +28,7 @@ class VectorDataBase:
         load_dotenv()
         self.use_open_source = use_open_source
         self.dataset_path = 'hub://muhammadmahmoud01/vector_db_HugeDoc'
-        self.db = DeepLake(self.dataset_path, overwrite=True, 
+        self.VectorStore = DeepLake(self.dataset_path, overwrite=True, 
                            embedding=HuggingFaceEmbeddings() if use_open_source else GoogleGenerativeAIEmbeddings(model="models/embedding-001"))
     
     def add_to_database(self,text):
@@ -48,4 +48,6 @@ class VectorDataBase:
         docs = chunck(text, 
                       size=512 if self.use_open_source else 6000, 
                       overlap=150 if self.use_open_source else 500)
-        self.db.add_documents(docs)
+        self.VectorStore.add_documents(docs)
+    
+    
