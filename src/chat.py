@@ -58,7 +58,7 @@ def get_agent(vector_store, temperature=0.2, n_clusters=5):
     ]
 
     # Load additional tools
-    additional_tools = load_tools(["math-llm", "serpapi"], llm=GoogleGenerativeAI(model="gemini-1.5-flash",temperature=temperature))
+    additional_tools = load_tools(["llm-math", "serpapi"], llm=GoogleGenerativeAI(model="gemini-1.5-flash",temperature=temperature))
     tools.extend(additional_tools)
 
     agent = initialize_agent(
