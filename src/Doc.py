@@ -149,11 +149,10 @@ class Document():
         pass
 
 
-db = VectorDataBase(use_open_source=False)
-doc = Document()
-doc.load_from_pdf('Books/the-story-of-doctor-dolittle.pdf')
-# #print(doc.vectorize(opensource=False, text=doc.data, task="summarization"))
-doc.save_to_vector_db(doc.data, db)
-# conv_chain = get_conversation_chain(db)
-# question_anwering(input_question="What does this book talk about?", conversation_chain=conv_chain)
-chat.run_agent(input_question="What does this book talk about?", vector_store=db, temperature=0.2, n_clusters=5)
+# db = VectorDataBase(use_open_source=False)
+# doc = Document()
+# doc.load_from_pdf('Books/the-story-of-doctor-dolittle.pdf')
+# # #print(doc.vectorize(opensource=False, text=doc.data, task="summarization"))
+# doc.save_to_vector_db(doc.data, db)
+# conv_chain = chat.get_conversation_chain(db, temperature=0.2)
+# print(chat.question_anwering(input_question="What does this book talk about?", conversation_chain=conv_chain))
