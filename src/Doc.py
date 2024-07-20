@@ -1,8 +1,8 @@
 import re
-from langchain.document_loaders import PyPDFLoader
+
+from PyPDF2 import PdfReader
 from Embedding import generate_embedding
 from VectorDB import VectorDataBase
-
 class Document():
     ID = -1
     def __init__(self):
@@ -29,7 +29,7 @@ class Document():
         self.title = None
         self.summaries = []
 
-    def load_from_pdf(self, FilePath):
+    def load_from_pdf(self, pdf):
         '''
         Loads a PDF document from a file and extracts its data.
         
@@ -38,12 +38,18 @@ class Document():
         
             Returns:
                 None
-        '''        
-        loader = PyPDFLoader(FilePath)
-        document = loader.load()
-        self.extract_data_from_document(document)
+        '''    
+        pdf_reader = PdfReader(pdf)    
+        self.extract_data_from_document(pdf_reader)
     
-    def extract_data_from_document(self, document):
+    def get_pdf_text(self, pdf):
+        text = ""
+        pdf_reader = PdfReader(pdf)
+        for page in pdf_reader.pages:
+            text += page.extract_text()
+        return text
+
+    def extract_data_from_document(self, pdf_reader):
         '''
         Extracts the text data from all pages of the document and combines them after cleaning .
         
@@ -53,13 +59,13 @@ class Document():
             Returns:
                 None
         '''        
-        text_content = ' '.join([page.page_content for page in document])
+        text_content = ' '.join([page.extract_text() for page in pdf_reader.pages])
         clean_text = self.clean_text(text_content)
         self.data += clean_text
     
     def clean_text(self, text_content):
         '''
-        Cleans the text by removing extra whitespaces and breaklines.
+        Cleans the text by removing punctiations, Url links, mails, extra whitespaces and breaklines.
         
             Parameters:
                 text_content (str): The whole text of the document.
@@ -67,9 +73,19 @@ class Document():
             Returns:
                 cleaned_text (str): the cleaned text to be processed 
         '''        
-        text_content = re.sub(r'\t|[ ]{2,}', ' ', text_content)
+
         text_content = re.sub(r'\n[ ]', '\n', text_content)
         text_content = re.sub(r'\n{2,}', '\n', text_content)
+        email_pattern = r'\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+(?:\.[a-zA-Z]{2,6})?\b'
+        text_content = re.sub(email_pattern, '', text_content)  # remove email addresses
+        urls = re.findall(r'https?://\S+', text_content)  # find all URLs
+        for url in urls:
+            text_content = text_content.replace(url, '')  # remove the URL
+        
+        text_content = re.sub(r'[^\x00-\x7F]+', '', text_content) # remove non-ASCII characters
+        text_content = re.sub(r'[^\w\s]+', '', text_content) # remove some punctuations
+        text_content = re.sub(r'\t|[ ]{2,}', ' ', text_content) # remove tabs and multible whitespaces 
+
         cleaned_text = text_content.strip()
         return cleaned_text
 
