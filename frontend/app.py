@@ -1,6 +1,6 @@
 import streamlit as st
 import summarizer_UI, QA_UI
-
+from streamlit_modal import Modal
 from pathlib import Path
 from PIL import Image
 from PyPDF2 import PdfReader
@@ -24,15 +24,15 @@ if 'sum' not in st.session_state:
 if 'QA' not in st.session_state:
     st.session_state.QA = False
 
-# # a boolean variable to check if the process button was clicked
+# a boolean variable to check if the process button was clicked
 if 'flag' not in st.session_state:
     st.session_state.flag = False
 
-#  a session_state that holds chunking docs 
+# a session_state that holds chunking docs 
 if 'docs' not in st.session_state:
     st.session_state.docs = []
 
-#  a session_state that holds vector embeddings
+# a session_state that holds vector embeddings
 if 'vecs' not in st.session_state:
     st.session_state.vecs = list[list[float]]
 
@@ -54,21 +54,30 @@ doc = Doc.Document()
 
 if not files:
     st.session_state.flag = False
-
+    st.session_state.docs = []
+    st.session_state.vecs = list[list[float]]
 if process:
     if not files:
         st.error("Please upload Pdf documents")
     else:
-        # TODO: check for len(Pdfs) < 2000  
+        total_lenght = 0 
+        exceeded = False
         for file in files:
-            doc.load_from_pdf(file)
-        with st.spinner("Processing ..."):
-            # TODO: 3luka-> use vector db to retreive vectors 
-            # TODO: 3luka or me-> get docs from one function only
-            st.session_state.docs, st.session_state.vecs = emb.generate_embedding(open_source=False, text=doc.data)
-            
-        st.success("Done!")
-        st.session_state.flag = True       
+            pdf_reader = PdfReader(file)
+            total_lenght+=len(pdf_reader.pages)
+            if(total_lenght > 2000):
+                st.warning("Please upload Pdf documents that have less than 2000 pages in total")
+                exceeded = True
+                break
+            doc.extract_data_from_document(pdf_reader)
+        if not exceeded:           
+            with st.spinner("Processing ..."):
+                # TODO: 3luka-> use vector db to retreive vectors 
+                # TODO: 3luka or me-> get docs from one function only
+                st.session_state.docs, st.session_state.vecs = emb.generate_embedding(open_source=False, text=doc.data)
+                
+            st.success("Done!")
+            st.session_state.flag = True       
 
 if files and st.session_state.flag:      
     c1, c2 = st.columns(spec=[1,1], gap="small")

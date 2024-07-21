@@ -31,6 +31,7 @@ class Document():
         self.title = None
         self.summaries = []
 
+    # NOTE: there is no need to this function after stablishing the front end 
     def load_from_pdf(self, pdf):
         '''
         Loads a PDF document from a file and extracts its data.
@@ -101,8 +102,9 @@ class Document():
         
             Returns:
                 embeddings (list): the embeddings for the given text
-        '''  
-        embeddings = generate_embedding(open_source=opensource, text=text, task=task)
+        ''' 
+        # NOTE: the generate_embedding returns two variables docs and vectors 
+        _ , embeddings = generate_embedding(open_source=opensource, text=text, task=task)
         
         return embeddings 
     
