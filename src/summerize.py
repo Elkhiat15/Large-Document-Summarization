@@ -9,7 +9,7 @@ from langchain.chains.summarize import load_summarize_chain
 from sklearn.cluster import KMeans
 from dotenv import load_dotenv
 
-def get_indices(num_clusters, kmeans):
+def get_indices(num_clusters, kmeans, vectors):
     '''
         Gets the closest indices to clusters centriods to be summarized.
         
@@ -55,7 +55,7 @@ def get_summaries(map_chain, selected_indices, docs):
     summaries = Document(page_content=summaries)
     return summaries
 
-def cluster_and_summarize(num_clusters):
+def cluster_and_summarize(num_clusters, docs, vectors):
     '''
         Gets the summary of each selected chunk after clustring then combines the summaries into one document.
         
@@ -68,7 +68,7 @@ def cluster_and_summarize(num_clusters):
 
     kmeans = KMeans(n_clusters=num_clusters, random_state=42).fit(vectors)
 
-    selected_indices = get_indices(num_clusters, kmeans)
+    selected_indices = get_indices(num_clusters, kmeans, vectors)
 
     map_prompt = """
     You will be given a single passage of a book. This section will be enclosed in triple backticks (```)
@@ -88,7 +88,7 @@ def cluster_and_summarize(num_clusters):
     summaries = get_summaries(map_chain, selected_indices, docs)
     return summaries
 
-def summarize_all(summaries):
+#def summarize_all(summaries):
     '''
         Gets the summary of all summaries.
         
@@ -121,7 +121,7 @@ def summarize_all(summaries):
 
 
 ####################################### Suggested Modification ##############################
-def summarize(n_clusters):
+def summarize(n_clusters, docs ,vectors):
     '''
         Gets the summary of all summaries.
         
@@ -141,7 +141,7 @@ def summarize(n_clusters):
     ```{text}```
     VERBOSE SUMMARY:
     """
-    summaries = cluster_and_summarize(num_clusters=n_clusters)
+    summaries = cluster_and_summarize(n_clusters,docs, vectors)
     combine_prompt_template = PromptTemplate(template=combine_prompt, input_variables=["text"])
 
     reduce_chain = load_summarize_chain(
@@ -156,8 +156,8 @@ def summarize(n_clusters):
 
 
 # intializing the LLModel
-# load_dotenv()
-# llm = ChatGoogleGenerativeAI(model="gemini-pro")
+load_dotenv()
+llm = ChatGoogleGenerativeAI(model="gemini-pro")
 
 # # loading, cleaning and embedding
 # doc = Doc.Document()
