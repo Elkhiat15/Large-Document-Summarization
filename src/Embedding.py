@@ -3,7 +3,7 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
-
+load_dotenv()
 def chunck(text, size, overlap):
     '''
         Chunk a text into documents
