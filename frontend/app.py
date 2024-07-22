@@ -45,7 +45,7 @@ dummy = Image.open(dummy_dir)
 st.header("Let's Get Started!")
 st.image(image=cover, caption="cover")
 _, c, _ = st.columns(spec=[1,1,1]) # to center the subheader
-c.subheader(":green[Upload PDF files here]")
+c.subheader(":red[Upload PDF files here]")
 files = st.file_uploader(label="Uploader", accept_multiple_files=True, type="pdf", label_visibility="collapsed")
 
 process = st.button(label="Process")
@@ -54,6 +54,11 @@ doc = Doc.Document()
 
 if not files:
     st.session_state.flag = False
+    st.session_state.started = False
+    st.session_state.guided_refined = False
+    st.session_state.auto_refined = False
+    st.session_state.add_more = False
+    st.session_state.response = ""
     st.session_state.docs = []
     st.session_state.vecs = list[list[float]]
 if process:
