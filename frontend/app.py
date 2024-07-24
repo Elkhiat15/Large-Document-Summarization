@@ -75,7 +75,6 @@ if not files:
 
 if process:
     if not files:
-        res = db.delete()
         st.error("Please upload Pdf documents")
     else:
         total_lenght = 0 
