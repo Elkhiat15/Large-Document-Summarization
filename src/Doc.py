@@ -151,12 +151,13 @@ class Document():
         pass
 
 
-db = VectorDataBase(use_open_source=False)
-doc = Document()
-doc.load_from_pdf('Books/the-story-of-doctor-dolittle.pdf')
-# # #print(doc.vectorize(opensource=False, text=doc.data, task="summarization"))
-doc.save_to_vector_db(doc.data, db)
-# conv_chain = chat.get_conversation_chain(db, temperature=0.2)
-# print(chat.question_anwering(input_question="What does this book talk about?", conversation_chain=conv_chain))
-embeddings = db.VectorStore.embeddings.data()['value']
-print(embeddings)
+# db = VectorDataBase(use_open_source=False)
+# doc = Document()
+# doc.load_from_pdf('Large-Document-Summarization/Books/the-story-of-doctor-dolittle.pdf')
+# # # #print(doc.vectorize(opensource=False, text=doc.data, task="summarization"))
+# doc.save_to_vector_db(doc.data, db)
+# # conv_chain = chat.get_conversation_chain(db, temperature=0.2)
+# # print(chat.question_anwering(input_question="What does this book talk about?", conversation_chain=conv_chain))
+# db.get_embeddings_text()
+# db.delete()
+# print(db.VectorStore)
