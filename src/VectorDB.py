@@ -56,10 +56,18 @@ class VectorDataBase:
             returns the ids of the dataset
         """
         return self.ids
-    
-    def get_embeddings(self):
+
+    def get_embeddings_text(self):
         """
             returns the tensors of the dataset
         """
-        
-        return self.VectorStore.vectorstore.dataset.tensors
+        tensors = self.VectorStore.vectorstore.tensors()
+        print(tensors['embedding'].data(), tensors['text'].text())
+        return tensors['embedding'], tensors['text']
+    
+    def delete(self):
+        """
+            deletes the vector database
+        """
+        return self.VectorStore.delete(self.ids)
+    
