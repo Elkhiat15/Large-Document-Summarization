@@ -163,6 +163,24 @@ def refine_summary(prev_summary, guide = ""):
 
     return output_summary
 
+# NOTE: dummy function that should be removed after correcting QA bot 
+def dummy_get_answer(prompt):
+    QA_prompt = """
+        You are a good assistant the answer questions.
+        Answer the following question: {question}.
+        """
+    QA_prompt_template = PromptTemplate(template=QA_prompt, input_variables=["question"])
+
+    QA_chain = LLMChain(
+        llm=llm,
+        prompt=QA_prompt_template
+        )
+
+    answer = QA_chain.predict(question= prompt)
+
+    return answer
+
+
 # intializing the LLModel
 load_dotenv()
 llm = ChatGoogleGenerativeAI(model="gemini-pro")
