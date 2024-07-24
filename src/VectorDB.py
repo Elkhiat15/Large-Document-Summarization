@@ -49,6 +49,7 @@ class VectorDataBase:
         docs = chunck(text, 
                       size=512 if self.use_open_source else 6000, 
                       overlap=150 if self.use_open_source else 500)
-        self.VectorStore.add_documents(docs)
+        self.ids = self.VectorStore.add_documents(docs)
     
-    
+    def get_ids(self):
+        return self.ids
