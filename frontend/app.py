@@ -8,8 +8,9 @@ import os
 import sys
 sys.path.insert(0, '../src')
 import Doc , Embedding as emb
-from VectorDB import VectorDataBase
-from chat import get_conversation_chain, question_anwering
+#from VectorDB import VectorDataBase
+#from chat import get_conversation_chain, question_anwering
+from summerize import dummy_get_answer
 
 
 st.set_page_config(
@@ -60,7 +61,7 @@ files = st.file_uploader(label="Uploader", accept_multiple_files=True, type="pdf
 process = st.button(label="Process")
 
 doc = Doc.Document()
-db = VectorDataBase()
+#db = VectorDataBase()
 
 if not files:
     st.session_state.flag = False
@@ -71,7 +72,7 @@ if not files:
     st.session_state.response = ""
     st.session_state.docs = []
     st.session_state.vecs = list[list[float]]
-    res = db.delete()
+    #res = db.delete()
 
 if process:
     if not files:
@@ -89,9 +90,9 @@ if process:
             doc.extract_data_from_document(pdf_reader)
         if not exceeded:           
             with st.spinner("Processing ..."):
-                st.session_state.docs = db.add_to_database(doc.data)
-                st.session_state.vecs, _ = db.get_embeddings_text()
-                
+                #st.session_state.docs = db.add_to_database(doc.data)
+                #st.session_state.vecs, _ = db.get_embeddings_text()
+                st.session_state.docs, st.session_state.vecs = emb.generate_embedding(False, doc.data) 
             st.success("Done!")
             st.session_state.flag = True       
 
@@ -123,8 +124,9 @@ class MaltiPage:
                 summarizer_UI.run(st,st.session_state.docs ,st.session_state.vecs)
             if  st.session_state.QA:
                 # TODO: 3luka-> pass any parameters that you need inside you function here 
-                chain = get_conversation_chain(db, temperature=0.7)
-                QA_UI.run(st, chain, question_anwering)
+                #chain = get_conversation_chain(db, temperature=0.7)
+                #QA_UI.run(st, chain, question_anwering)
+                QA_UI.run(st, dummy_get_answer)
         else:
             st.session_state.QA = False
             st.session_state.sum = False
