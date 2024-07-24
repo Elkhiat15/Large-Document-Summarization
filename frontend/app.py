@@ -4,7 +4,7 @@ from streamlit_modal import Modal
 from pathlib import Path
 from PIL import Image
 from PyPDF2 import PdfReader
-
+import os
 import sys
 sys.path.insert(0, '../src')
 import Doc , Embedding as emb
@@ -38,10 +38,17 @@ if 'docs' not in st.session_state:
 if 'vecs' not in st.session_state:
     st.session_state.vecs = list[list[float]]
 
-current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
-cover_dir = current_dir / "..\\assets" / "cover.jpg"
+# current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
+# cover_dir = current_dir / "..\\assets" / "cover.jpg"
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Define the relative path to the assets
+cover_dir = os.path.join(current_dir, '..', 'assets', 'cover.jpg')
+
 cover = Image.open(cover_dir)
-dummy_dir = current_dir / "..\\assets" / "left.jpg"
+dummy_dir = os.path.join(current_dir, '..', 'assets', 'left.jpg')
+
 dummy = Image.open(dummy_dir)
 
 st.header("Let's Get Started!")
