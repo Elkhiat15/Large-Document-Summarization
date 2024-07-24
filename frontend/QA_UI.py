@@ -42,6 +42,7 @@ def run(stt, chain, get_answer):
         if user_question:
             # Get the answer to the user's question
             answer = get_answer(user_question, chain)
+            print(answer)
             # Update the chat history
             st.session_state.chat_history.append(("User", user_question))
             st.session_state.chat_history.append(("Bot", answer))
