@@ -9,6 +9,7 @@ import sys
 sys.path.insert(0, '../src')
 import Doc , Embedding as emb
 from VectorDB import VectorDB
+from chat import get_conversation_chain, question_anwering
 
 
 st.set_page_config(
@@ -82,8 +83,6 @@ if process:
             doc.extract_data_from_document(pdf_reader)
         if not exceeded:           
             with st.spinner("Processing ..."):
-                # TODO: 3luka-> use vector db to retreive vectors 
-                # TODO: 3luka or me-> get docs from one function only
                 st.session_state.docs = db.add_to_database(doc.data)
                 st.session_state.vecs, _ = db.get_embeddings_text()
                 
@@ -114,7 +113,8 @@ class MaltiPage:
                 summarizer_UI.run(st,st.session_state.docs ,st.session_state.vecs)
             if  st.session_state.QA:
                 # TODO: 3luka-> pass any parameters that you need inside you function here 
-                QA_UI.run(st)
+                chain = get_conversation_chain(db, temperature=0.7)
+                QA_UI.run(st, chain, question_anwering)
         else:
             st.session_state.QA = False
             st.session_state.sum = False
