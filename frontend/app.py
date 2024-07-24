@@ -8,7 +8,7 @@ from PyPDF2 import PdfReader
 import sys
 sys.path.insert(0, '../src')
 import Doc , Embedding as emb
-from VectorDB import VectorDB
+from VectorDB import VectorDataBase
 from chat import get_conversation_chain, question_anwering
 
 
@@ -53,7 +53,7 @@ files = st.file_uploader(label="Uploader", accept_multiple_files=True, type="pdf
 process = st.button(label="Process")
 
 doc = Doc.Document()
-db = VectorDB()
+db = VectorDataBase()
 
 if not files:
     st.session_state.flag = False
