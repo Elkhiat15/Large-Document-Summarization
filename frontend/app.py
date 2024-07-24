@@ -111,6 +111,10 @@ if files and st.session_state.flag:
             if st.button("Chat with Pdfs"):
                 st.session_state.QA = True
                 st.session_state.sum = False
+                st.session_state.add_more = False
+                st.session_state.auto_refined = False
+                st.session_state.guided_refined = False
+
 
 class MaltiPage:
     def run():

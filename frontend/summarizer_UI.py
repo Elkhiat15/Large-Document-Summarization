@@ -1,5 +1,6 @@
 import sys
 import time
+import re
 from css_styles import css, response_template
 import streamlit as st 
 sys.path.insert(0, '../src')
@@ -52,24 +53,24 @@ def run(stt, docs, vectors):
                      st.write("Comming soon...")
 
  
-       def refine_summary(with_guide):
-              prev_response = " " + st.session_state.response
+       def get_refined_summary(with_guide):
+              prev_response =  st.session_state.response
               guide = ""
               if with_guide:
                      guide = st.text_input("Enter a Guide to LLM")
-                     # TODO: call the function to do this job
-                     #st.session_state.response = "This is a guided response"
+                     if guide!="":
+                            with st.spinner("Refining ..."):
+                                   st.session_state.response = summerize.refine_summary(prev_response, guide)
               else :
-                     # TODO: call the function to do this job
-                     #st.session_state.response = "This is an auto refined response"
-                     pass
+                     with st.spinner("Refining ..."):
+                            st.session_state.response = summerize.refine_summary(prev_response)
+    
               if not (guide=="" and with_guide):
                      c1, c2 = st.columns(spec=[1,1], gap="small")
                      with c1.container(border=True):
                             st.subheader("Previous summary")
-
                             st.markdown(response_template.replace(
-                                   "{{TXT}}", f"\n\n{prev_response}"), unsafe_allow_html=True)
+                                   "{{TXT}}", f"\n\n{prev_response}\n\n"), unsafe_allow_html=True)
                             
                      c2.subheader("Refined Summary")
                      c2.write("\n\n\n")
@@ -81,7 +82,9 @@ def run(stt, docs, vectors):
        if not st.session_state.started:
               start_summarise()
               st.session_state.started = True 
-              
+       else :
+              if st.session_state.response !="":
+                     st.write(st.session_state.response)     
  
        c1,c2,c3 = st.columns(spec=[1,1,1])
                      
@@ -108,8 +111,8 @@ def run(stt, docs, vectors):
 
        if st.session_state.auto_refined:
               st.header("Auto Refine")
-              refine_summary(with_guide=False)
+              get_refined_summary(with_guide=False)
 
        if st.session_state.guided_refined:
               st.header("Refine With Guide")
-              refine_summary(with_guide=True)
+              get_refined_summary(with_guide=True)
