@@ -44,12 +44,14 @@ class VectorDataBase:
                     text (str): The input text to be added to the vector database.
 
                 Returns:
-                    None
+                    chuncks of docs
         """
         docs = chunck(text, 
                       size=512 if self.use_open_source else 6000, 
                       overlap=150 if self.use_open_source else 500)
         self.ids = self.VectorStore.add_documents(docs)
+        
+        return docs
     
     def get_ids(self):
         """
@@ -62,7 +64,6 @@ class VectorDataBase:
             returns the tensors of the dataset
         """
         tensors = self.VectorStore.vectorstore.tensors()
-        print(tensors['embedding'].data(), tensors['text'].text())
         return tensors['embedding'], tensors['text']
     
     def delete(self):

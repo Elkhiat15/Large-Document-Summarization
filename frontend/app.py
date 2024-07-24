@@ -8,6 +8,7 @@ from PyPDF2 import PdfReader
 import sys
 sys.path.insert(0, '../src')
 import Doc , Embedding as emb
+from VectorDB import VectorDB
 
 
 st.set_page_config(
@@ -51,6 +52,7 @@ files = st.file_uploader(label="Uploader", accept_multiple_files=True, type="pdf
 process = st.button(label="Process")
 
 doc = Doc.Document()
+db = VectorDB()
 
 if not files:
     st.session_state.flag = False
@@ -61,8 +63,11 @@ if not files:
     st.session_state.response = ""
     st.session_state.docs = []
     st.session_state.vecs = list[list[float]]
+    res = db.delete()
+
 if process:
     if not files:
+        res = db.delete()
         st.error("Please upload Pdf documents")
     else:
         total_lenght = 0 
@@ -79,7 +84,8 @@ if process:
             with st.spinner("Processing ..."):
                 # TODO: 3luka-> use vector db to retreive vectors 
                 # TODO: 3luka or me-> get docs from one function only
-                st.session_state.docs, st.session_state.vecs = emb.generate_embedding(open_source=False, text=doc.data)
+                st.session_state.docs = db.add_to_database(doc.data)
+                st.session_state.vecs, _ = db.get_embeddings_text()
                 
             st.success("Done!")
             st.session_state.flag = True       
