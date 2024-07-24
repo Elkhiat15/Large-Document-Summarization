@@ -52,4 +52,14 @@ class VectorDataBase:
         self.ids = self.VectorStore.add_documents(docs)
     
     def get_ids(self):
+        """
+            returns the ids of the dataset
+        """
         return self.ids
+    
+    def get_embeddings(self):
+        """
+            returns the tensors of the dataset
+        """
+        
+        return self.VectorStore.vectorstore.dataset.tensors
