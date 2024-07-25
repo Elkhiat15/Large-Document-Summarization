@@ -121,7 +121,7 @@ class MaltiPage:
     def run():
         if st.session_state.flag:
             if st.session_state.sum:
-                summarizer_UI.run(st,st.session_state.docs ,st.session_state.vecs)
+                summarizer_UI.run(st,st.session_state.docs ,st.session_state.vecs, PdfReader)
             if  st.session_state.QA:
                 # TODO: 3luka-> pass any parameters that you need inside you function here 
                 #chain = get_conversation_chain(db, temperature=0.7)
