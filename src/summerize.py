@@ -163,6 +163,34 @@ def refine_summary(prev_summary, guide = ""):
 
     return output_summary
 
+def get_cumulative_summary(docs, vectors, prev_summary):
+
+    cumulative_prompt = """
+    You will be given two summaries each is a summary from a one book or many books.
+    The summaries will be enclosed in triple backticks (```)
+    Your goal is to Combine the two summaries into one summary.
+    The combined summary you give the reader should be coherance and divided into parts like the two summary.
+    
+
+    ```{text}```
+    COMBINED SUMMARY:
+    """
+    n_clusters = 5
+    summary = summarize(n_clusters, docs, vectors)
+    cumulative_prompt_template = PromptTemplate(template=cumulative_prompt, input_variables=["text"])
+
+    reduce_chain = load_summarize_chain(
+        llm=llm,
+        prompt=cumulative_prompt_template
+        )
+    
+    two_summaries = summary+"\n"+ prev_summary
+    two_summaries = Document(page_content=two_summaries)
+    output = reduce_chain.invoke([two_summaries])
+    cumulative_summary = output['output_text']
+    return cumulative_summary  
+
+
 # NOTE: dummy function that should be removed after correcting QA bot 
 def dummy_get_answer(prompt):
     QA_prompt = """

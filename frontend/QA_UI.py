@@ -26,7 +26,7 @@ def run(stt, dummy_get_answer):
                     st.write(user_template.replace("{{MSG}}", message),
                         unsafe_allow_html=True)
                 else:
-                    st.write(bot_template.replace("{{MSG}}", f"\n\n{message}"),
+                    st.write(bot_template.replace("{{MSG}}", f"\n\n{message}\n\n"),
                             unsafe_allow_html=True)
   
     else:

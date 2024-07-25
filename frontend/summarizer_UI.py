@@ -4,9 +4,9 @@ import re
 from css_styles import css, response_template
 import streamlit as st 
 sys.path.insert(0, '../src')
-import summerize
+import summerize, Doc, Embedding as emb
 
-def run(stt, docs, vectors):
+def run(stt, docs, vectors, PdfReader):
 
        # a boolean variable to check for the first summary output 
        if 'started' not in st.session_state:
@@ -28,6 +28,14 @@ def run(stt, docs, vectors):
        if 'response' not in st.session_state:
               st.session_state.response = ""
 
+       # a string variable to store the last summary output
+       if 'cum_response' not in st.session_state:
+              st.session_state.cum_response = ""
+
+       # a boolean variable to check if the Add button was clicked
+       if 'add' not in st.session_state:
+              st.session_state.add = False
+
        def stream_data(response, t):
               for word in response.split(" "):
                      yield word + " "
@@ -47,10 +55,37 @@ def run(stt, docs, vectors):
 
              
        def cumulative():
-              files = st.file_uploader("UPload")
-              if st.button("Add"):
-                     # TODO: call the function to do this job
-                     st.write("Comming soon...")
+              files = st.file_uploader(label="Cumulative Uploader", accept_multiple_files=True, type="pdf", label_visibility="collapsed")
+
+              process = st.button(label="Add")
+
+              doc = Doc.Document()
+
+              if not files:
+                     st.session_state.add = False
+                     st.session_state.cum_response = ""
+                     
+              if process:
+                     if not files:
+                            st.error("Please upload Pdf documents")
+                     else:
+                            total_lenght = 0 
+                            exceeded = False
+                            for file in files:
+                                   pdf_reader = PdfReader(file)
+                                   total_lenght+=len(pdf_reader.pages)
+                                   if(total_lenght > 2000):
+                                          st.warning("Please upload Pdf documents that have less than 2000 pages in total")
+                                          exceeded = True
+                                          break
+                                   doc.extract_data_from_document(pdf_reader)
+                            if not exceeded:           
+                                   with st.spinner("Processing ..."):
+                                          docs2, vectors2 = emb.generate_embedding(False, doc.data)
+                                          st.session_state.cum_response = summerize.get_cumulative_summary(docs2, vectors2, st.session_state.response) 
+                            st.write_stream(stream_data(st.session_state.cum_response, 0.03))
+                            st.session_state.add = True       
+
 
  
        def get_refined_summary(with_guide):
@@ -68,8 +103,8 @@ def run(stt, docs, vectors):
               if not (guide=="" and with_guide):
                      c1, c2 = st.columns(spec=[1,1], gap="small")
                      with c1.container(border=True):
-                            st.subheader("Previous summary")
-                            st.markdown(response_template.replace(
+                            c1.subheader("Previous summary")
+                            c1.markdown(response_template.replace(
                                    "{{TXT}}", f"\n\n{prev_response}\n\n"), unsafe_allow_html=True)
                             
                      c2.subheader("Refined Summary")
