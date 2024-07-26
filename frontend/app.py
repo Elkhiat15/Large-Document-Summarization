@@ -54,8 +54,8 @@ dummy = Image.open(dummy_dir)
 
 st.header("Let's Get Started!")
 st.image(image=cover, caption="cover")
-_, c, _ = st.columns(spec=[1,1,1]) # to center the subheader
-c.subheader(":red[Upload PDF files here]")
+_, c, _ = st.columns(spec=[1,5,1]) # to center the subheader
+c.subheader(":blue[Please, Upload Pdf documents that have [5-2000] pages in total.]")
 files = st.file_uploader(label="Uploader", accept_multiple_files=True, type="pdf", label_visibility="collapsed")
 
 process = st.button(label="Process")
@@ -76,7 +76,7 @@ if not files:
 
 if process:
     if not files:
-        st.error("Please upload Pdf documents")
+        st.error("Please, Upload Pdf documents")
     else:
         total_lenght = 0 
         exceeded = False
@@ -84,7 +84,7 @@ if process:
             pdf_reader = PdfReader(file)
             total_lenght+=len(pdf_reader.pages)
             if(total_lenght > 2000):
-                st.warning("Please upload Pdf documents that have less than 2000 pages in total")
+                st.warning("Please, upload Pdf documents that have less than 2000 pages in total")
                 exceeded = True
                 break
             doc.extract_data_from_document(pdf_reader)
@@ -93,7 +93,7 @@ if process:
                 #st.session_state.docs = db.add_to_database(doc.data)
                 #st.session_state.vecs, _ = db.get_embeddings_text()
                 st.session_state.docs, st.session_state.vecs = emb.generate_embedding(False, doc.data) 
-            st.success("Done!")
+            st.success(f"Processing Done! **{total_lenght}** pages to be summarized")
             st.session_state.flag = True       
 
 if files and st.session_state.flag:      

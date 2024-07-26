@@ -42,19 +42,19 @@ def run(stt, docs, vectors, PdfReader):
                      time.sleep(t)
 
        def start_summarise():
-              # TODO: build a funcion to get the best num_clusters  
-              num_clusters = 5
-              if len(docs) < num_clusters:
-                     # TODO: add another type of summarization to summarize small docs
+              if len(docs) < 5:
                      st.warning("The document is too short to be summarized")
               else :
                      with st.spinner("Processing ..."):
-                            st.session_state.response = summerize.summarize(num_clusters, docs, vectors)
+                            st.session_state.response = summerize.summarize(docs, vectors)
 
                      st.write_stream(stream_data(st.session_state.response, 0.03))
 
              
        def cumulative():
+              _, c, _ = st.columns(spec=[1,5,1]) # to center the subheader
+              c.subheader(":blue[Please, Upload Pdf documents that have [5-2000] pages in total.]")
+
               files = st.file_uploader(label="Cumulative Uploader", accept_multiple_files=True, type="pdf", label_visibility="collapsed")
 
               process = st.button(label="Add")
@@ -67,7 +67,7 @@ def run(stt, docs, vectors, PdfReader):
                      
               if process:
                      if not files:
-                            st.error("Please upload Pdf documents")
+                            st.error("Please, upload Pdf documents")
                      else:
                             total_lenght = 0 
                             exceeded = False
@@ -79,12 +79,17 @@ def run(stt, docs, vectors, PdfReader):
                                           exceeded = True
                                           break
                                    doc.extract_data_from_document(pdf_reader)
-                            if not exceeded:           
-                                   with st.spinner("Processing ..."):
-                                          docs2, vectors2 = emb.generate_embedding(False, doc.data)
-                                          st.session_state.cum_response = summerize.get_cumulative_summary(docs2, vectors2, st.session_state.response) 
-                            st.write_stream(stream_data(st.session_state.cum_response, 0.03))
-                            st.session_state.add = True       
+                            if total_lenght < 5:
+                                   st.warning("The document is too short to be summarized")
+                            else :
+                                   if not exceeded:           
+                                          with st.spinner("Processing ..."):
+                                                 docs2, vectors2 = emb.generate_embedding(False, doc.data)
+                                          st.success(f"Processing Done! **{total_lenght}** pages to be added")
+                                          with st.spinner("Summarizing ..."):
+                                                 st.session_state.cum_response = summerize.get_cumulative_summary(docs2, vectors2, st.session_state.response) 
+                                   st.write_stream(stream_data(st.session_state.cum_response, 0.03))
+                                   st.session_state.add = True       
 
 
  
