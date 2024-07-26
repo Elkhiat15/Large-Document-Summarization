@@ -8,8 +8,8 @@ from langchain.vectorstores import FAISS
 from langchain.chains.llm import LLMChain
 from langchain.chains.summarize import load_summarize_chain
 from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
 from dotenv import load_dotenv
-
 
 def get_indices(num_clusters, kmeans, vectors):
     '''
@@ -33,6 +33,16 @@ def get_indices(num_clusters, kmeans, vectors):
     
     return selected_indices
 
+def get_best_model(vectors):
+    
+    max_k = min(len(vectors), 20)
+    scores = [silhouette_score(vectors, KMeans(n_clusters=k, n_init=1).fit_predict(vectors)) for k in range(2, max_k)]
+    best_k = np.argmax(scores) + 2
+    best_model = KMeans(n_clusters=best_k, n_init=1).fit(vectors)
+    
+    print("\033[92m Best number of clusters: {}\033[0m".format(best_k))
+    print("\033[92m Number of vectors: {}\033[0m".format(len(vectors)))
+    return best_model, best_k
 
 def get_summaries(map_chain, selected_indices, docs):
     '''
@@ -59,7 +69,7 @@ def get_summaries(map_chain, selected_indices, docs):
     return summaries
 
 
-def cluster_and_summarize(num_clusters, docs, vectors):
+def cluster_and_summarize(docs, vectors):
     '''
         Gets the summary of each selected chunk after clustring then combines the summaries into one document.
         
@@ -69,10 +79,10 @@ def cluster_and_summarize(num_clusters, docs, vectors):
             Returns:
                 summaries (Document): The combined summaries.
     '''        
+    best_model, best_n_clusters = get_best_model(vectors)
+    #kmeans = KMeans(n_clusters=num_clusters, random_state=42).fit(vectors)
 
-    kmeans = KMeans(n_clusters=num_clusters, random_state=42).fit(vectors)
-
-    selected_indices = get_indices(num_clusters, kmeans, vectors)
+    selected_indices = get_indices(best_n_clusters, best_model, vectors)
 
     map_prompt = """
     You will be given a single passage of a book. This section will be enclosed in triple backticks (```)
@@ -93,7 +103,7 @@ def cluster_and_summarize(num_clusters, docs, vectors):
     return summaries
 
 
-def summarize(n_clusters, docs ,vectors):
+def summarize(docs ,vectors):
     '''
         Gets the summary of all summaries.
         
@@ -113,7 +123,7 @@ def summarize(n_clusters, docs ,vectors):
     ```{text}```
     VERBOSE SUMMARY:
     """
-    summaries = cluster_and_summarize(n_clusters,docs, vectors)
+    summaries = cluster_and_summarize(docs, vectors)
     combine_prompt_template = PromptTemplate(template=combine_prompt, input_variables=["text"])
 
     reduce_chain = load_summarize_chain(
@@ -175,8 +185,7 @@ def get_cumulative_summary(docs, vectors, prev_summary):
     ```{text}```
     COMBINED SUMMARY:
     """
-    n_clusters = 5
-    summary = summarize(n_clusters, docs, vectors)
+    summary = summarize(docs, vectors)
     cumulative_prompt_template = PromptTemplate(template=cumulative_prompt, input_variables=["text"])
 
     reduce_chain = load_summarize_chain(
@@ -212,7 +221,6 @@ def dummy_get_answer(prompt):
 # intializing the LLModel
 load_dotenv()
 llm = ChatGoogleGenerativeAI(model="gemini-pro")
-
 # # loading, cleaning and embedding
 # doc = Doc.Document()
 # doc.load_from_pdf('./Books/Final_proba_(1111.pdf')
