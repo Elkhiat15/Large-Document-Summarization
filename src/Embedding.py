@@ -24,8 +24,9 @@ def chunck(text, size, overlap):
         chunk_overlap=overlap
     )
 
+    text_chuncks = text_splitter.split_text(text)
     docs = text_splitter.create_documents([text])
-    return docs
+    return text_chuncks, docs
 
 def generate_embedding(open_source: bool, text: str, task: str = "summarization"):
     '''
@@ -62,10 +63,10 @@ def generate_embedding_google(text: str):
                 list: A list of embeddings for the input text chunks.
     '''
     
-    docs = chunck(text, size=6000, overlap=500)  
+    text_chunk, docs = chunck(text, size=6000, overlap=500)  
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-    vectors = embeddings.embed_documents([x.page_content for x in docs])
-    return docs, vectors
+    vectors =embeddings.embed_documents([x.page_content for x in docs])
+    return text_chunk, docs, vectors
 
 def embed_with_hugging_face(text: str, task: str):
     '''

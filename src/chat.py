@@ -73,7 +73,7 @@ def get_conversation_chain(vector_store, temperature):
     conversation_chain = ConversationalRetrievalChain.from_llm(
         llm=ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=temperature),
         memory=memory,
-        retriever=vector_store.VectorStore.as_retriever()  
+        retriever=vector_store.as_retriever()  
     )
 
     return conversation_chain
