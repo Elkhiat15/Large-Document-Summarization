@@ -3,8 +3,14 @@ from dotenv import load_dotenv
 from langchain_community.vectorstores import DeepLake
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain.vectorstores import FAISS
 from Embedding import chunck
 
+
+def get_vectorstore(chunks, use_open_source = False):
+    embeddings = embedding=HuggingFaceEmbeddings() if use_open_source else GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    vectorstore = FAISS.from_texts(texts=chunks, embedding=embeddings)
+    return vectorstore
 
 class VectorDataBase:
 
@@ -27,10 +33,10 @@ class VectorDataBase:
                     None
         """
         load_dotenv()
-        self.use_open_source = use_open_source
-        self.dataset_path = 'hub://muhammadmahmoud01/vector_db_HugeDoc'
-        self.VectorStore = DeepLake(self.dataset_path, overwrite=True, 
-                           embedding=HuggingFaceEmbeddings() if use_open_source else GoogleGenerativeAIEmbeddings(model="models/embedding-001"))
+        #self.use_open_source = use_open_source
+        #self.dataset_path = 'hub://muhammadmahmoud01/vector_db_HugeDoc'
+        #self.VectorStore = DeepLake(self.dataset_path, overwrite=True, 
+        #                  embedding=HuggingFaceEmbeddings() if use_open_source else GoogleGenerativeAIEmbeddings(model="models/embedding-001"))
     
     def add_to_database(self,text):
         """

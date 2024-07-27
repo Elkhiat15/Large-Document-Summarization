@@ -1,6 +1,6 @@
 import streamlit as st
 from css_styles import css, bot_template, user_template
-def run(stt, dummy_get_answer):
+def run(stt, chain, question_anwering):
     st.markdown(css, unsafe_allow_html=True)
     
     st.header("Welcome to QA Chat")
@@ -15,7 +15,7 @@ def run(stt, dummy_get_answer):
         # Get the answer to the user's question
         with st.spinner("Thinking 💡"):
             # TODO: only replace the dummy_get_answer function with the real one  
-            answer = dummy_get_answer(user_question)
+            answer = question_anwering(user_question, chain)
         # Update the chat history
         st.session_state.chat_history.append(("User", user_question))
         st.session_state.chat_history.append(("Bot", answer))
