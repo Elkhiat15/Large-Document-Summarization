@@ -2,7 +2,6 @@ import re
 
 from PyPDF2 import PdfReader
 from Embedding import generate_embedding
-from VectorDB import VectorDataBase
 import chat
 
 class Document():

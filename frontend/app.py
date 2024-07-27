@@ -8,9 +8,7 @@ import os
 import sys
 sys.path.insert(0, '../src')
 import Doc , Embedding as emb ,VectorDB as db
-#from VectorDB import VectorDataBase
 from chat import get_conversation_chain, question_anwering
-from summerize import dummy_get_answer
 
 
 st.set_page_config(
