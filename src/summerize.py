@@ -78,8 +78,7 @@ def cluster_and_summarize(docs, vectors):
                 summaries (Document): The combined summaries.
     '''        
     best_model, best_n_clusters = get_best_model(vectors)
-    #kmeans = KMeans(n_clusters=num_clusters, random_state=42).fit(vectors)
-
+    
     selected_indices = get_indices(best_n_clusters, best_model, vectors)
 
     map_prompt = """
@@ -133,6 +132,45 @@ def summarize(docs ,vectors):
     full_summary = output['output_text']
     return full_summary  
 
+############################### test #######################################
+def summarize_(docs ,vectors, guide="", summaries = None):
+    '''
+        Gets the summary of all summaries.
+        
+            Parameters:
+                summaries (Document): The combined summaries.
+                
+            Returns:
+                full_summary (str): The full summary we target.
+    '''        
+    
+    combine_prompt = """
+    You will be given a series of summaries from a one book or many books. The summaries will be enclosed in triple backticks (```)
+    Your goal is to give a verbose summary of what said in those summaries.
+    The finall summary you give the reader should be coherance and easy to grasp the whole summaries.
+    You should consider the order of summaries and divide the summary to parts.
+
+    ```{text}```
+    VERBOSE SUMMARY:
+    """
+    if guide!="":
+        guide_prompt = f"Consider the user guide when summarizing guide: ({guide})"
+        combine_prompt = guide_prompt+"\n"+ combine_prompt  
+    
+    if summaries == None:
+        summaries = cluster_and_summarize(docs, vectors)
+    
+    combine_prompt_template = PromptTemplate(template=combine_prompt, input_variables=["text"])
+
+    reduce_chain = load_summarize_chain(
+        llm=llm,
+        prompt=combine_prompt_template
+        )
+
+    output = reduce_chain.invoke([summaries])
+    full_summary = output['output_text']
+    return summaries, full_summary  
+#################################################################################3
 
 def refine_summary(prev_summary, guide = ""):
     output_summary = ""
