@@ -1,6 +1,5 @@
 import streamlit as st
 import summarizer_UI, QA_UI
-from streamlit_modal import Modal
 from pathlib import Path
 from PIL import Image
 from PyPDF2 import PdfReader

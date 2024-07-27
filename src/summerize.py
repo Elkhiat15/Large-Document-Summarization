@@ -37,9 +37,7 @@ def get_best_model(vectors):
     scores = [silhouette_score(vectors, KMeans(n_clusters=k, n_init=1).fit_predict(vectors)) for k in range(2, max_k)]
     best_k = np.argmax(scores) + 2
     best_model = KMeans(n_clusters=best_k, n_init=1).fit(vectors)
-    
-    print("\033[92m Best number of clusters: {}\033[0m".format(best_k))
-    print("\033[92m Number of vectors: {}\033[0m".format(len(vectors)))
+   
     return best_model, best_k
 
 def get_summaries(map_chain, selected_indices, docs):
