@@ -1,12 +1,10 @@
 import sys
 import time
-import re
 from css_styles import css, response_template
-import streamlit as st 
 sys.path.insert(0, '../src')
 import summerize, Doc, Embedding as emb
 
-def run(stt, docs, vectors, PdfReader):
+def run(st, docs, vectors, PdfReader):
 
        # a boolean variable to check for the first summary output 
        if 'started' not in st.session_state:
@@ -49,6 +47,7 @@ def run(stt, docs, vectors, PdfReader):
               for word in response.split(" "):
                      yield word + " "
                      time.sleep(t)
+
 
        def start_summarise():
               if len(docs) < 5:
