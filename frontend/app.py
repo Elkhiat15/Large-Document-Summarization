@@ -31,7 +31,7 @@ if 'QA' not in st.session_state:
 if 'flag' not in st.session_state:
     st.session_state.flag = False
 
-# a session_state that holds chunking docs 
+# a session_state that holds chunking docs --> for summarization
 if 'docs' not in st.session_state:
     st.session_state.docs = []
 
@@ -39,11 +39,11 @@ if 'docs' not in st.session_state:
 if 'vecs' not in st.session_state:
     st.session_state.vecs = list[list[float]]
 
+# a session_state that holds chunking text --> for QA 
 if 'chunks' not in st.session_state:
     st.session_state.chunks = []
 
 # current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
-# cover_dir = current_dir / "..\\assets" / "cover.jpg"
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -64,7 +64,6 @@ files = st.file_uploader(label="Uploader", accept_multiple_files=True, type="pdf
 process = st.button(label="Process")
 
 doc = Doc.Document()
-#db = VectorDataBase()
 
 if not files:
     st.session_state.flag = False
@@ -74,9 +73,9 @@ if not files:
     st.session_state.add_more = False
     st.session_state.response = ""
     st.session_state.docs = []
+    st.session_state.chunks = []
     st.session_state.vecs = list[list[float]]
-    #res = db.delete()
-
+   
 if process:
     if not files:
         st.error("Please, Upload Pdf documents")
@@ -93,8 +92,6 @@ if process:
             doc.extract_data_from_document(pdf_reader)
         if not exceeded:           
             with st.spinner("Processing ..."):
-                #st.session_state.docs = db.add_to_database(doc.data)
-                #st.session_state.vecs, _ = db.get_embeddings_text()
                 open_source = False
                 st.session_state.chunks, st.session_state.docs, st.session_state.vecs = emb.generate_embedding(open_source, doc.data)
                 st.session_state.vectorstore =  db.get_vectorstore(st.session_state.chunks, open_source)
@@ -129,10 +126,8 @@ class MaltiPage:
             if st.session_state.sum:
                 summarizer_UI.run(st,st.session_state.docs ,st.session_state.vecs, PdfReader)
             if  st.session_state.QA:
-                # TODO: 3luka-> pass any parameters that you need inside you function here 
                 chain = get_conversation_chain(st.session_state.vectorstore, temperature=0.7)
                 QA_UI.run(st, chain, question_anwering)
-                #QA_UI.run(st, dummy_get_answer)
         else:
             st.session_state.QA = False
             st.session_state.sum = False
