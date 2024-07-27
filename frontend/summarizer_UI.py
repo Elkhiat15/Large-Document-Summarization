@@ -49,7 +49,7 @@ def run(stt, docs, vectors, PdfReader):
                      st.warning("The document is too short to be summarized")
               else :
                      with st.spinner("Processing ..."):
-                            st.session_state.summaries, st.session_state.response = summerize.summarize_(docs, vectors)
+                            st.session_state.summaries, st.session_state.response = summerize.summarize(docs, vectors)
 
                      st.write_stream(stream_data(st.session_state.response, 0.03))
 
@@ -103,7 +103,7 @@ def run(stt, docs, vectors, PdfReader):
                      guide = st.text_input("Enter a Guide to LLM")
                      if guide!="":
                             with st.spinner("Refining ..."):
-                                   st.session_state.summaries, st.session_state.response = summerize.summarize_(docs, vectors, guide, st.session_state.summaries)
+                                   st.session_state.summaries, st.session_state.response = summerize.summarize(docs, vectors, guide, st.session_state.summaries)
               else :
                      with st.spinner("Refining ..."):
                             st.session_state.response = summerize.refine_summary(prev_response)
