@@ -24,6 +24,10 @@ def run(stt, docs, vectors, PdfReader):
        if 'guided_refined' not in st.session_state:
               st.session_state.guided_refined = False
 
+       # a boolean variable to check if the Add button was clicked
+       if 'add' not in st.session_state:
+              st.session_state.add = False
+
        # a string variable to store the last summary output
        if 'response' not in st.session_state:
               st.session_state.response = ""
@@ -32,12 +36,14 @@ def run(stt, docs, vectors, PdfReader):
        if 'cum_response' not in st.session_state:
               st.session_state.cum_response = ""
 
+       # a string variable to store the first summary output
+       if 'first_response' not in st.session_state:
+              st.session_state.first_response = ""
+
+       # the summaries of docs chunks 
        if 'summaries' not in st.session_state:
               st.session_state.summaries = []
 
-       # a boolean variable to check if the Add button was clicked
-       if 'add' not in st.session_state:
-              st.session_state.add = False
 
        def stream_data(response, t):
               for word in response.split(" "):
@@ -50,12 +56,13 @@ def run(stt, docs, vectors, PdfReader):
               else :
                      with st.spinner("Processing ..."):
                             st.session_state.summaries, st.session_state.response = summerize.summarize(docs, vectors)
+                            st.session_state.first_response = st.session_state.response
 
                      st.write_stream(stream_data(st.session_state.response, 0.03))
 
              
        def cumulative():
-              _, c, _ = st.columns(spec=[1,5,1]) # to center the subheader
+              _, c, _ = st.columns(spec=[1,5,1])
               c.subheader(":blue[Please, Upload Pdf documents that have [5-2000] pages in total.]")
 
               files = st.file_uploader(label="Cumulative Uploader", accept_multiple_files=True, type="pdf", label_visibility="collapsed")
@@ -126,8 +133,8 @@ def run(stt, docs, vectors, PdfReader):
               start_summarise()
               st.session_state.started = True 
        else :
-              if st.session_state.response !="":
-                     st.write(st.session_state.response)     
+              if st.session_state.first_response !="":
+                     st.markdown(f"### First response:\n {st.session_state.first_response}")     
  
        c1,c2,c3 = st.columns(spec=[1,1,1])
                      
