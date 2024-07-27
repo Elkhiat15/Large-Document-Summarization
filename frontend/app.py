@@ -17,6 +17,10 @@ st.set_page_config(
     layout="wide"
     )
 
+#___________________________________________________
+# Defining session state variables                  |
+#___________________________________________________|
+
 # a boolean variable to check if the summarize button was clicked 
 if 'sum' not in st.session_state:
     st.session_state.sum = False
@@ -41,11 +45,13 @@ if 'vecs' not in st.session_state:
 if 'chunks' not in st.session_state:
     st.session_state.chunks = []
 
+
+#___________________________________________________________
+# Defining the relative path to the assets & loading images.|
+#___________________________________________________________|
+
 # current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
-
 current_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Define the relative path to the assets
 cover_dir = os.path.join(current_dir, '..', 'assets', 'cover.jpg')
 
 cover = Image.open(cover_dir)
@@ -55,7 +61,12 @@ dummy = Image.open(dummy_dir)
 
 st.header("Let's Get Started!")
 st.image(image=cover, caption="cover")
-_, c, _ = st.columns(spec=[1,5,1]) # to center the subheader
+
+#___________________________________________________
+# Uploading & processsing documents.                |
+#___________________________________________________|
+
+_, c, _ = st.columns(spec=[1,5,1]) 
 c.subheader(":blue[Please, Upload Pdf documents that have [5-2000] pages in total.]")
 files = st.file_uploader(label="Uploader", accept_multiple_files=True, type="pdf", label_visibility="collapsed")
 
@@ -117,6 +128,9 @@ if files and st.session_state.flag:
                 st.session_state.auto_refined = False
                 st.session_state.guided_refined = False
 
+#___________________________________________________
+# Multi App controller.                             |
+#___________________________________________________|
 
 class MaltiPage:
     def run():
