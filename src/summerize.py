@@ -1,4 +1,3 @@
-#import Doc, Embedding as emb
 import numpy as np
 
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -199,36 +198,6 @@ def get_cumulative_summary(docs, vectors, prev_summary):
     return cumulative_summary  
 
 
-# NOTE: dummy function that should be removed after correcting QA bot 
-def dummy_get_answer(prompt):
-    QA_prompt = """
-        You are a good assistant the answer questions.
-        Answer the following question: {question}.
-        """
-    QA_prompt_template = PromptTemplate(template=QA_prompt, input_variables=["question"])
-
-    QA_chain = LLMChain(
-        llm=llm,
-        prompt=QA_prompt_template
-        )
-
-    answer = QA_chain.predict(question= prompt)
-
-    return answer
-
-
 # intializing the LLModel
 load_dotenv()
 llm = ChatGoogleGenerativeAI(model="gemini-pro")
-# # loading, cleaning and embedding
-# doc = Doc.Document()
-# doc.load_from_pdf('./Books/Final_proba_(1111.pdf')
-# cleaned_text = doc.data
-# docs, vectors = emb.generate_embedding(open_source=False, text=cleaned_text)
-
-# # summarizing
-# num_clusters = 5
-# summaries = cluster_and_summarize(num_clusters)
-# response = summarize_all(summaries)
-
-# print(f"\033[1;32m {response} \033[0m") # to print in green in terminal 
