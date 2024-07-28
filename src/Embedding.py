@@ -15,7 +15,8 @@ def chunck(text, size, overlap):
                 overlap (int): the number of overlapping.
 
             Returns:
-                list: A list of documents, each containing a chunk of the input text.
+                text_chuncks (list[str]): A list of string, each containing a chunk of the input text
+                docs (list[Document]): A list of documents, each containing a chunk of the input text.
     '''
 
     text_splitter = RecursiveCharacterTextSplitter(
@@ -28,7 +29,7 @@ def chunck(text, size, overlap):
     docs = text_splitter.create_documents([text])
     return text_chuncks, docs
 
-def generate_embedding(open_source: bool, text: str, task: str = "summarization"):
+def generate_embedding(open_source, text):
     '''
         Generate embeddings for the provided text using either Google Generative AI or Hugging Face models.
 
@@ -39,17 +40,15 @@ def generate_embedding(open_source: bool, text: str, task: str = "summarization"
                 open_source (bool): Flag to determine which embedding model to use. If False, Google Generative AI is used.
                                     If True, Hugging Face is used.
                 text (str): The input text to be embedded.
-                task (str): The task for which the embedding is being generated, e.g., "classification", "summarization".
-                            Default is "summarization".
 
             Returns:
-                list: A list of embeddings for the input text.
+                another function calling.
     '''
 
     if not open_source:
         return generate_embedding_google(text)
     
-    return embed_with_hugging_face(text, task=task)
+    return embed_with_hugging_face(text)
 
 def generate_embedding_google(text: str):
     '''
@@ -60,7 +59,9 @@ def generate_embedding_google(text: str):
                 text (str): The input text to be embedded.
 
             Returns:
-                list: A list of embeddings for the input text chunks.
+                text_chuncks (list[str]): A list of string, each containing a chunk of the input text
+                docs (list[Document]): A list of documents, each containing a chunk of the input text.
+                vectors (list[list[float]]): A list of embeddings for the input text chunks.
     '''
     
     text_chunk, docs = chunck(text, size=6000, overlap=500)  
@@ -68,22 +69,23 @@ def generate_embedding_google(text: str):
     vectors =embeddings.embed_documents([x.page_content for x in docs])
     return text_chunk, docs, vectors
 
-def embed_with_hugging_face(text: str, task: str):
+def embed_with_hugging_face(text):
     '''
         Generate embeddings for the provided text using Hugging Face models.
 
-        This function uses Hugging Face Sentence transforemer embeddings to generate embeddings for a given text. 
+        This function uses HuggingFace Sentence transforemer embeddings to generate embeddings for a given text. 
         It ensures the maximum sequence length aligns with requirements or handles text chunking if necessary.
 
             Parameters:
                 text (str): The input text to be embedded.
-                task (str): The task for which the embedding is being generated, e.g., "classification", "summarization".
-
+                
             Returns:
-                list: A list of embeddings for the input text.
+                text_chuncks (list[str]): A list of string, each containing a chunk of the input text
+                docs (list[Document]): A list of documents, each containing a chunk of the input text.
+                vectors (list[list[float]]): A list of embeddings for the input text chunks.
     '''
  
-    docs = chunck(text, size=512, overlap=150)  
+    text_chunk, docs = chunck(text, size=512, overlap=150)  
 
     try:
         embeddings = HuggingFaceEmbeddings()
@@ -92,4 +94,4 @@ def embed_with_hugging_face(text: str, task: str):
         return
 
     vectors = embeddings.embed_documents([x.page_content for x in docs])
-    return docs, vectors
+    return text_chunk, docs, vectors
