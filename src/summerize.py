@@ -9,6 +9,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 from dotenv import load_dotenv
 
+
 def get_indices(num_clusters, kmeans, vectors):
     '''
         Gets the closest indices to clusters centriods to be summarized.
@@ -16,7 +17,8 @@ def get_indices(num_clusters, kmeans, vectors):
             Parameters:
                 num_clusters (int): Number of clusters.
                 kmeans (KMeans): A fitted K-Means model.
-        
+                vectors (list[list[float]]): A list of embeddings for the input text chunks.
+
             Returns:
                 selected_indices (list[int]): A list of indices of data points closest to each centriod.
     '''        
@@ -31,6 +33,7 @@ def get_indices(num_clusters, kmeans, vectors):
     
     return selected_indices
 
+
 def get_best_model(vectors):
     
     max_k = min(len(vectors), 20)
@@ -39,6 +42,7 @@ def get_best_model(vectors):
     best_model = KMeans(n_clusters=best_k, n_init=1).fit(vectors)
    
     return best_model, best_k
+
 
 def get_summaries(map_chain, selected_indices, docs):
     '''
@@ -70,7 +74,8 @@ def cluster_and_summarize(docs, vectors):
         Gets the summary of each selected chunk after clustring then combines the summaries into one document.
         
             Parameters:
-                num_clusters (int): Number of clusters.
+                docs (list[Document]): A list of documents where each document holds a chunck of the whole document.
+                vectors (list[list[float]]): A list of embeddings for the input text chunks.
                 
             Returns:
                 summaries (Document): The combined summaries.
@@ -97,14 +102,19 @@ def cluster_and_summarize(docs, vectors):
     summaries = get_summaries(map_chain, selected_indices, docs)
     return summaries
 
+
 def summarize(docs ,vectors, guide="", summaries = None):
     '''
         Gets the summary of all summaries.
         
             Parameters:
+                docs (list[Document]): A list of documents where each document holds a chunck of the whole document.
+                vectors (list[list[float]]): A list of embeddings for the input text chunks.
+                guide (str): A guide (rule) from user to refine the summary
                 summaries (Document): The combined summaries.
                 
             Returns:
+                summaries (Document): The combined summaries.
                 full_summary (str): The full summary we target.
     '''        
     
@@ -135,6 +145,7 @@ def summarize(docs ,vectors, guide="", summaries = None):
     full_summary = output['output_text']
     return summaries, full_summary  
 
+
 def refine_summary(prev_summary):
     refine_prompt = """
     You will be given a summary which you provided to the reader earlier saying {text}
@@ -152,6 +163,7 @@ def refine_summary(prev_summary):
     output_summary = refine_chain.predict(text= prev_summary)
     
     return output_summary
+
 
 def get_cumulative_summary(docs, vectors, prev_summary):
 
