@@ -7,7 +7,7 @@ This project provides a comprehensive solution for summarizing large documents a
 ## Key Features
 
 - **Multi-Document Summarization**: Upload one or more large documents and receive a concise summary of the content.  
-- **Automatic Summary Refining**: Ask the model to refine the summary automatically for improved accuracy.  
+- **Automatic Summary Refining**: Ask the model to refine the summary automatically for improved response.  
 - **Guided Summary Refining**: Provide guidance to the model to refine the summary based on your specific needs.  
 - **Cumulative Summarization**: Add more documents to be summarized in a cumulative way, allowing for a comprehensive understanding of multiple documents.  
 - **Chat with PDFs**: Engage in conversational interactions with PDFs, exploring their content in a more intuitive and interactive way.  
