@@ -1,44 +1,21 @@
 import re
 from PyPDF2 import PdfReader
 class Document():
-    ID = -1
     def __init__(self):
         """
         Initializes a new Document object.
 
         Attributes:
         -----------
-        ID : int
-            A class-level attribute that keeps track of the number of Document instances created.
         data : str
             Holds the text data of the document.
-        title : str
-            Stores the title of the document.
-        summaries : list
-            A list to store the summaries of the document.
-
+        
         Returns:
         --------
         None
         """
-        Document.ID += 1
+        
         self.data = ""
-        self.title = None
-        self.summaries = []
-
-    # NOTE: there is no need to this function after stablishing the front end 
-    def load_from_pdf(self, pdf):
-        '''
-        Loads a PDF document from a file and extracts its data.
-        
-            Parameters:
-                FilePath (str): A path to the book.
-        
-            Returns:
-                None
-        '''    
-        pdf_reader = PdfReader(pdf)    
-        self.extract_data_from_document(pdf_reader)
     
     def get_pdf_text(self, pdf):
         text = ""
@@ -52,7 +29,7 @@ class Document():
         Extracts the text data from all pages of the document and combines them after cleaning .
         
             Parameters:
-                document (document): A document that holds the book.
+                pdf_reader (PdfReader): pdf reader that reads the documents.
         
             Returns:
                 None

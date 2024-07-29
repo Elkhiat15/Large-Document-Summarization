@@ -9,6 +9,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 from dotenv import load_dotenv
 
+
 def get_indices(num_clusters, kmeans, vectors):
     '''
         Gets the closest indices to clusters centriods to be summarized.
@@ -16,7 +17,8 @@ def get_indices(num_clusters, kmeans, vectors):
             Parameters:
                 num_clusters (int): Number of clusters.
                 kmeans (KMeans): A fitted K-Means model.
-        
+                vectors (list[list[float]]): A list of embeddings for the input text chunks.
+
             Returns:
                 selected_indices (list[int]): A list of indices of data points closest to each centriod.
     '''        
@@ -31,16 +33,26 @@ def get_indices(num_clusters, kmeans, vectors):
     
     return selected_indices
 
+
 def get_best_model(vectors):
+    '''
+        Gets the best number of clusters using Silhouette score method.
+        
+            Parameters:
+                vectors (list[list[float]]): A list of embeddings for the input text chunks.
+
+            Returns:
+                best_model (KMeans): The best model fitted to vectors usnig best number of clusters.
+                best_k (int): The best number of clusters using Silhouette score method.
+    '''        
     
     max_k = min(len(vectors), 20)
     scores = [silhouette_score(vectors, KMeans(n_clusters=k, n_init=1).fit_predict(vectors)) for k in range(2, max_k)]
     best_k = np.argmax(scores) + 2
     best_model = KMeans(n_clusters=best_k, n_init=1).fit(vectors)
-    
-    print("\033[92m Best number of clusters: {}\033[0m".format(best_k))
-    print("\033[92m Number of vectors: {}\033[0m".format(len(vectors)))
+   
     return best_model, best_k
+
 
 def get_summaries(map_chain, selected_indices, docs):
     '''
@@ -72,7 +84,8 @@ def cluster_and_summarize(docs, vectors):
         Gets the summary of each selected chunk after clustring then combines the summaries into one document.
         
             Parameters:
-                num_clusters (int): Number of clusters.
+                docs (list[Document]): A list of documents where each document holds a chunck of the whole document.
+                vectors (list[list[float]]): A list of embeddings for the input text chunks.
                 
             Returns:
                 summaries (Document): The combined summaries.
@@ -99,14 +112,19 @@ def cluster_and_summarize(docs, vectors):
     summaries = get_summaries(map_chain, selected_indices, docs)
     return summaries
 
+
 def summarize(docs ,vectors, guide="", summaries = None):
     '''
-        Gets the summary of all summaries.
+        Gets the summary of all summaries and refined the summary using user guide if any.
         
             Parameters:
+                docs (list[Document]): A list of documents where each document holds a chunck of the whole document.
+                vectors (list[list[float]]): A list of embeddings for the input text chunks.
+                guide (str): A guide (rule) from user to refine the summary
                 summaries (Document): The combined summaries.
                 
             Returns:
+                summaries (Document): The combined summaries.
                 full_summary (str): The full summary we target.
     '''        
     
@@ -137,7 +155,18 @@ def summarize(docs ,vectors, guide="", summaries = None):
     full_summary = output['output_text']
     return summaries, full_summary  
 
+
 def refine_summary(prev_summary):
+    '''
+        Automatically refines the response for EX: using more simple sentenses remove unneeded words etc...
+        
+            Parameters:
+                prev_summary (str): The previous summary provided by the model.
+
+            Returns:
+                refined_summary (str): The Refined summary.
+    '''        
+
     refine_prompt = """
     You will be given a summary which you provided to the reader earlier saying {text}
     Your goal is to refine this summary to a better one.
@@ -151,11 +180,24 @@ def refine_summary(prev_summary):
         prompt=refine_prompt_template
         )
     
-    output_summary = refine_chain.predict(text= prev_summary)
+    refined_summary = refine_chain.predict(text= prev_summary)
     
-    return output_summary
+    return refined_summary
+
 
 def get_cumulative_summary(docs, vectors, prev_summary):
+    '''
+        Summarizes the given documents then combined it with the previous summary and finnaly summarize the two summaries.
+        
+            Parameters:
+                docs (list[Document]): A list of documents where each document holds a chunck of the whole document.
+                vectors (list[list[float]]): A list of embeddings for the input text chunks.
+                prev_summary (str): The previous summary provided by the model 
+                                    after summarizing the given documents at the start of program.
+
+            Returns:
+                cumulative_summary (str): The summary provided by the model after summarize.
+    '''        
 
     cumulative_prompt = """
     You will be given two summaries each is a summary from a one book or many books.
