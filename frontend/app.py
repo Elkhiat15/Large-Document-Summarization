@@ -51,12 +51,15 @@ if 'chunks' not in st.session_state:
 
 # current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
 current_dir = os.path.dirname(os.path.abspath(__file__))
+
 cover_dir = os.path.join(current_dir, '..', 'assets', 'cover.jpg')
-
 cover = Image.open(cover_dir)
-dummy_dir = os.path.join(current_dir, '..', 'assets', 'left.jpg')
 
-dummy = Image.open(dummy_dir)
+left_dir = os.path.join(current_dir, '..', 'assets', 'left.jpg')
+left = Image.open(left_dir)
+
+right_dir = os.path.join(current_dir, '..', 'assets', 'right.jpg')
+right = Image.open(right_dir)
 
 st.header("Let's Get Started!")
 st.image(image=cover, caption="cover")
@@ -110,14 +113,14 @@ if process:
 if files and st.session_state.flag:      
     c1, c2 = st.columns(spec=[1,1], gap="small")
     with c1:
-        st.image(image=dummy)
+        st.image(image=left)
         _, c, _ = c1.columns(spec=[1,1,1])
         with c:
             if st.button("Summarize Pdfs"):
                 st.session_state.sum = True
                 st.session_state.QA = False
     with c2:
-        st.image(image=dummy)
+        st.image(image=right)
         _, c, _ = c2.columns(spec=[1,1,1])
         with c:
             if st.button("Chat with Pdfs"):
