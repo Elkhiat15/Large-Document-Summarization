@@ -2,7 +2,7 @@ import sys
 import time
 from css_styles import css, response_template
 sys.path.insert(0, '../src')
-import summerize, Doc, Embedding as emb
+import summarize, Doc, Embedding as emb
 
 def run(st, docs, vectors, PdfReader):
 
@@ -54,7 +54,7 @@ def run(st, docs, vectors, PdfReader):
                      st.warning("The document is too short to be summarized")
               else :
                      with st.spinner("Processing ..."):
-                            st.session_state.summaries, st.session_state.response = summerize.summarize(docs, vectors)
+                            st.session_state.summaries, st.session_state.response = summarize.summarize(docs, vectors)
                             st.session_state.first_response = st.session_state.response
 
                      st.write_stream(stream_data(st.session_state.response, 0.03))
@@ -96,7 +96,7 @@ def run(st, docs, vectors, PdfReader):
                                                  _, docs2, vectors2 = emb.generate_embedding(False, doc.data)
                                           st.success(f"Processing Done! **{total_lenght}** pages to be added")
                                           with st.spinner("Summarizing ..."):
-                                                 st.session_state.cum_response = summerize.get_cumulative_summary(docs2, vectors2, st.session_state.response) 
+                                                 st.session_state.cum_response = summarize.get_cumulative_summary(docs2, vectors2, st.session_state.response) 
                                    st.write_stream(stream_data(st.session_state.cum_response, 0.03))
                                    st.session_state.add = True       
 
@@ -109,10 +109,10 @@ def run(st, docs, vectors, PdfReader):
                      guide = st.text_input("Enter a Guide to LLM")
                      if guide!="":
                             with st.spinner("Refining ..."):
-                                   st.session_state.summaries, st.session_state.response = summerize.summarize(docs, vectors, guide, st.session_state.summaries)
+                                   st.session_state.summaries, st.session_state.response = summarize.summarize(docs, vectors, guide, st.session_state.summaries)
               else :
                      with st.spinner("Refining ..."):
-                            st.session_state.response = summerize.refine_summary(prev_response)
+                            st.session_state.response = summarize.refine_summary(prev_response)
     
               if not (guide=="" and with_guide):
                      c1, c2 = st.columns(spec=[1,1], gap="small")
