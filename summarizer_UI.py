@@ -1,8 +1,7 @@
 import sys
 import time
 from css_styles import css, response_template
-sys.path.insert(0, '../src')
-import summarize, Doc, Embedding as emb
+from src import summarize, Doc, Embedding as emb
 
 def run(st, docs, vectors, PdfReader):
 
