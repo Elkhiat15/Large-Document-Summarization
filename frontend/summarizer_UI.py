@@ -93,7 +93,7 @@ def run(st, docs, vectors, PdfReader):
                             else :
                                    if not exceeded:           
                                           with st.spinner("Processing ..."):
-                                                 docs2, vectors2 = emb.generate_embedding(False, doc.data)
+                                                 _, docs2, vectors2 = emb.generate_embedding(False, doc.data)
                                           st.success(f"Processing Done! **{total_lenght}** pages to be added")
                                           with st.spinner("Summarizing ..."):
                                                  st.session_state.cum_response = summerize.get_cumulative_summary(docs2, vectors2, st.session_state.response) 
