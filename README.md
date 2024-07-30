@@ -25,8 +25,7 @@ This project provides a comprehensive solution for summarizing large documents a
 - [**Chat with PDFs**](#f5): Engage in conversational interactions with PDFs, exploring their content in a more intuitive and interactive way.
 ---
 
-## How to use
-### To get started with our application, simply follow these steps:
+## How to get started
 
 * Clone the repository and replace `<REPO_LINK>` by the link to clone 
 ```
@@ -41,7 +40,8 @@ streamlit run main.py
 * You may need to change API Key, you can replace the `<YOUR_KEY>` with you actual API key in `.env` file in `src` directory.
 ```
 GOOGLE_API_KEY = <YOUR_KEY>
-```  
+```
+ 
 ---
 <a name="f1"></a>
 # Usage
@@ -53,7 +53,7 @@ GOOGLE_API_KEY = <YOUR_KEY>
 
 ### Our summarization workflow involves the following steps:
 
-**Document Upload**: Upload the document(s) to be summarized.  
+**Document Upload**: Upload the one ore more document with less than 2000 pages to be summarized.  
 **Text Cleaning**: Clean the text to remove unnecessary characters, links and formatting.  
 **Text Chunking**: Break the text into smaller chunks for more efficient processing.  
 **Clustering**: Cluster the chunked text to identify key topics and themes.   
@@ -61,22 +61,53 @@ GOOGLE_API_KEY = <YOUR_KEY>
 **Final Summarization**: Summarize the summaries to provide a concise overview of the entire document.  
 
 <p align="center">
-<img src="assets/LDS_GIF.gif" alt="My Image"> 
+<img src="assets/LDS_GIF.gif" alt="Summarize Image"> 
 </p>
 
 ---
 <a name="f2"></a>
 ## 2) Automatic Summary Refining
 
+Here you can ask the model to refine the summary automatically.   
+The refined response has more simple words and sentences for better understanding.
+
+<p align="center">
+<img src="assets/auto_refine_GIF.gif" alt="Auto refine Image"> 
+</p>
+
 ---
 
 <a name="f3"></a>
 ## 3) Guided Summary Refining
+Here you can give a guide or rule to the model about how to summarize or any needed rules.   
+The refined response follows user guide.  
+for EX: you can ask the model to summarize specific part of the document, pay more attention to a specific part, translate etc...
+
+<p align="center">
+<img src="assets/guide-refine_GIF.gif" alt="Guide refine Image"> 
+</p>
+
 
 ---
 
 <a name="f4"></a>
 ## 4) Cumulative Summarization
+
+<p align="center">
+<img src="assets/cummulative.jpeg" alt="cummulative arch Image"> 
+</p>
+
+The key point here is the reduction of time by not re-summarize the documents that was uploaded before.
+
+**As shown in the above diagram**:
+- User upload new document to be summarized.  
+- Model summarize the document using large document summarization approach that was described before.
+- Model combine the output summary from uploaded documents with the previous summary.
+- Then model summarize the combined summary in a cumulative manner.     
+
+<p align="center">
+<img src="assets/cumulative_GIF.gif" alt="cummulative arch Image"> 
+</p>
 
 ---
 
