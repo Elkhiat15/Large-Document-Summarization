@@ -25,8 +25,27 @@ This project provides a comprehensive solution for summarizing large documents a
 - [**Chat with PDFs**](#f5): Engage in conversational interactions with PDFs, exploring their content in a more intuitive and interactive way.
 ---
 
+## How to use
+### To get started with our application, simply follow these steps:
+
+* Clone the repository and replace `<REPO_LINK>` by the link to clone 
+```
+git clone <REPO_LINK>
+```  
+* Install the required dependencies using
+* Run the application using
+```
+pip install -r requirements.txt
+streamlit run main.py
+```  
+* You may need to change API Key, you can replace the `<YOUR_KEY>` with you actual API key in `.env` file in `src` directory.
+```
+GOOGLE_API_KEY = <YOUR_KEY>
+```  
+---
 <a name="f1"></a>
-## Multi/Large Document Summarization
+# Usage
+## 1) Multi/Large Document Summarization
 
 <p align="center">
 <img src="assets/LDS.jpeg" alt="My Image" > 
@@ -47,21 +66,21 @@ This project provides a comprehensive solution for summarizing large documents a
 
 ---
 <a name="f2"></a>
-## Automatic Summary Refining
+## 2) Automatic Summary Refining
 
 ---
 
 <a name="f3"></a>
-## Guided Summary Refining
+## 3) Guided Summary Refining
 
 ---
 
 <a name="f4"></a>
-## Cumulative Summarization
+## 4) Cumulative Summarization
 
 ---
 
 <a name="f5"></a>
-## Chat with PDFs
+## 5) Chat with PDFs
 
 ---
