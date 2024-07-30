@@ -12,7 +12,7 @@ This project provides a comprehensive solution for summarizing large documents a
 
 [**Python**](https://www.python.org/): The primary programming language used for development.  
 
-[**Langchain**](https://www.langchain.com): A powerful library for natural language processing tasks.  
+[**Langchain**](https://www.langchain.com): A powerful library designed to facilitate the development of applications that use LLMs.  
 
 [**Gemini API**](https://ai.google.dev/gemini-api/docs): An LLM API that I used for summarization and Embedding.  
 
