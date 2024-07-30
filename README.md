@@ -111,7 +111,7 @@ for EX: you can ask the model to summarize specific part of the document, pay mo
 ## 4) Cumulative Summarization
 
 <p align="center">
-<img src="assets/Cumulative.jpeg" alt="cummulative arch Image"> 
+<img src="assets/Cumulative_Arch.jpeg" alt="cummulative arch Image"> 
 </p>
 
 The key point here is the reduction of time by not re-summarizing the documents that were uploaded before.
