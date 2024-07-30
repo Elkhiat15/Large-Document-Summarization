@@ -114,13 +114,14 @@ for EX: you can ask the model to summarize specific part of the document, pay mo
 <img src="assets/Cumulative.jpeg" alt="cummulative arch Image"> 
 </p>
 
-The key point here is the reduction of time by not re-summarize the documents that was uploaded before.
+The key point here is the reduction of time by not re-summarizing the documents that were uploaded before.
 
 **As shown in the above diagram**:
-- User upload new document to be summarized.  
-- Model summarize the document using large document summarization approach that was described before.
-- Model combine the output summary from uploaded documents with the previous summary.
-- Then model summarize the combined summary in a cumulative manner.     
+
+- User uploads a new document to be summarized.
+- Model summarizes the document using the large document summarization approach that was described before.
+- Model combines the output summary from uploaded documents with the previous summary.
+- Then the model summarizes the combined summary in a cumulative manner.
 
 <p align="center">
 <img src="assets/cumulative_GIF.gif" alt="cummulative arch Image"> 
@@ -131,11 +132,11 @@ The key point here is the reduction of time by not re-summarize the documents th
 <a name="f5"></a>
 ## 5) Chat with PDFs
 
-The last feature is that you can chat with the PDFs you have just uploaded.  
- 
-- At the first of the program the documents was loaded to a vactor database.  
-- The vector database store the documents in an efficient manner by using embedding which helps in fast retreival.  
-- When you ask a question the model use the vector database to retreive the response.
+The last feature is that you can chat with the PDFs you have just uploaded.
+
+- At the start of the program, the documents were loaded into a vector database.
+- The vector database stores the documents in an efficient manner by using embeddings, which helps in fast retrieval.
+- When you ask a question, the model uses the vector database to retrieve the response.
 
 <p align="center">
 <img src="assets/chat_GIF.gif" alt="cummulative arch Image"> 
