@@ -94,7 +94,7 @@ for EX: you can ask the model to summarize specific part of the document, pay mo
 ## 4) Cumulative Summarization
 
 <p align="center">
-<img src="assets/cummulative.jpeg" alt="cummulative arch Image"> 
+<img src="assets/Cumulative.jpeg" alt="cummulative arch Image"> 
 </p>
 
 The key point here is the reduction of time by not re-summarize the documents that was uploaded before.
@@ -113,5 +113,15 @@ The key point here is the reduction of time by not re-summarize the documents th
 
 <a name="f5"></a>
 ## 5) Chat with PDFs
+
+The last feature is that you can chat with the PDFs you have just uploaded.  
+ 
+- At the first of the program the documents was loaded to a vactor database.  
+- The vector database store the documents in an efficient manner by using embedding which helps in fast retreival.  
+- When you ask a question the model use the vector database to retreive the response.
+
+<p align="center">
+<img src="assets/chat_GIF.gif" alt="cummulative arch Image"> 
+</p>
 
 ---
