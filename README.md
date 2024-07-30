@@ -148,5 +148,23 @@ The last feature is that you can chat with the PDFs you have just uploaded.
 
 * Refine the summary of a document based on your specific needs and interests.
 
-  ---
-  
+---
+## Contributing
+We welcome contributions to our project! If you're interested in helping us improve our application, please follow these steps:
+
+* Fork the repository using the "Fork" button on GitHub.
+
+* Create a new branch for your feature or fix using `git checkout -b my-feature`.
+
+* Make your changes and commit them using `git commit -m "My commit message"`.
+
+* Push your changes to your forked repository using `git push origin my-feature`.
+
+* Create a pull request to merge your changes into our main branch.
+
+---
+# Authors
+
+<a href="https://github.com/Elkhiat15/Large-Document-Summarization/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Elkhiat15/Large-Document-Summarization" />
+</a>
