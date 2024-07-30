@@ -141,3 +141,12 @@ The last feature is that you can chat with the PDFs you have just uploaded.
 </p>
 
 ---
+## Example Use Cases
+* Summarize a large research paper to understand the key findings and contributions.  
+
+* Use the chat feature to explore the content of a PDF and ask questions about specific sections.  
+
+* Refine the summary of a document based on your specific needs and interests.
+
+  ---
+  
