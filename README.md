@@ -1,4 +1,5 @@
 # Large Document Summarization and Chat with PDFs
+**Give it a look** [Try the demo](https://large-document-summarization-ithmzwp7rmjtjtrsc6rqpw.streamlit.app/)
 
 ## Overview
 This project provides a comprehensive solution for summarizing large documents and interacting with them in a conversational manner. Our application leverages the power of AI to automatically summarize one or more large documents, refine the summaries based on user input, and even engage in chat-like conversations with PDFs.
